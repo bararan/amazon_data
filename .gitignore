@@ -1,0 +1,5 @@
+Files/*.*
+!Files/.gitkeep
+/*.csv
+*.pyc
+.cache_ggshield
