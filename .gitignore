@@ -3,3 +3,4 @@ Files/*.*
 /*.csv
 *.pyc
 .cache_ggshield
+__pycache__/*.*
