@@ -170,7 +170,7 @@ class TermRecord():
             f'{self.cshares[FILE_A]:.2f}%' if self.cshares[FILE_A] else '',
             f'{self.cshares[FILE_B]:.2f}%' if self.cshares[FILE_B] else '',
             f'{self.cshares[FILE_C]:.2f}%' if self.cshares[FILE_C] else '',
-            f'{avg_cshare:.2f}',
+            f'{avg_cshare:.2f}%',
         ] + self.file_c_columns + [
             self.ranks[FILE_A],
             self.ranks[FILE_B],
