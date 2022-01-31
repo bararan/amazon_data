@@ -189,6 +189,8 @@ def parse_file(filename): #, terms_list, titles_list):
         for row in rdr:
             # First determine if we need to exclude this term:
             term = row[1].strip().lower() # Store a lowercase version of the term to avoid mismatches due to case differences
+            if len(term) < 2:
+                continue # Skip one-character search terms.
             if term in excluded_terms: # We already added this term to exclude list while parsing previous files
                 continue
             c_share_1 = row[6].strip()
