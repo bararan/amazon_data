@@ -31,18 +31,9 @@ FILE_C = INPUT_FILES[int(input('Please type the number that corresponds to the T
 print('The script will generate a filename automatically.')
 output_fn = input('If you wish to specify a filename yourself please enter it here (with the file extension). Otherwise hit Enter to start the script: ')
 
-# The following will store all search terms in files
-# all_terms = {
-#     FILE_A : [],
-#     FILE_B : [],
-#     FILE_C : []
-# }
+# The following will store the lowercase equivalent of included search terms with apostrophes removed.
 all_terms = []
-# all_titles = {
-#     FILE_A : {}, 
-#     FILE_B : {}, 
-#     FILE_C : {},
-# }
+# The following will store a list of unique titles related to included search terms.
 all_titles = {}
 #The two below will store the included and excluded search terms, respectively.
 included_terms = {}
@@ -65,7 +56,7 @@ class TermRecord():
     def __init__(self, search_term):
         self.search_term = search_term
         self.appearances = 1 # Number of files including the term
-        self.file_c_columns = ['NA']*12 # Stores data from columns D-O of third file
+        self.file_c_columns = ['']*12 # Stores data from columns D-O of third file
         self.ranks = {
             FILE_A: BIG_NUMBER, #SFR for the first month
             FILE_B: BIG_NUMBER, #SFR for the first month
@@ -77,17 +68,7 @@ class TermRecord():
             FILE_C: None, # Sum of conversion shares for the third month
             
         }
-        # self.term_freq = {
-        #     FILE_A: None, # Number of times the search term appears in search terms in first file
-        #     FILE_B: None, # Number of times the search term appears in search terms in second file
-        #     FILE_C: None, # Number of times the search term appears in search terms in third file
-        # }
         self.term_freq = None
-        # self.title_freq = {
-        #     FILE_A: None, # Number of times the search term appears in titles in first file
-        #     FILE_B: None, # Number of times the search term appears in titles in second file
-        #     FILE_C: None, # Number of times the search term appears in titles in third file
-        # } 
         self.title_freq = None
 
     def add_file_c_columns(self, col_data):
@@ -112,13 +93,6 @@ class TermRecord():
         This method first sets the rank to zero for files in which the search term could not be found,
         then calculates the average rank of the search term across three files.
         '''
-        # sum_ranks = 0
-        # for k, v in self.ranks.items():
-        #     if v == BIG_NUMBER:
-        #         self.ranks[k] = 0
-        #     else:
-        #         sum_ranks += v
-        # return sum_ranks / self.appearances
         return sum([r if r < BIG_NUMBER else 0 for r in self.ranks.values()]) / self.appearances
 
     def calculate_avg_cshare(self):
@@ -133,9 +107,6 @@ class TermRecord():
         Single quotes/ apostrophes are removed from search.
         '''
         self.term_freq = all_terms.count(self.search_term.replace("'",""))
-        # self.term_freq[FILE_A] = all_terms[FILE_A].count(self.search_term)
-        # self.term_freq[FILE_B] = all_terms[FILE_B].count(self.search_term)
-        # self.term_freq[FILE_C] = all_terms[FILE_C].count(self.search_term)
 
     def calculate_title_frequencies(self):
         '''
@@ -143,9 +114,6 @@ class TermRecord():
         the included search terms in the last month.
         '''
         self.title_freq = all_titles.count(self.search_term.replace("'",""))
-        # self.title_freq[FILE_A] = all_titles[FILE_A].count(self.search_term)
-        # self.title_freq[FILE_B] = all_titles[FILE_B].count(self.search_term)
-        # self.title_freq[FILE_C] = all_titles[FILE_C].count(self.search_term)
 
     def generate_output_row(self):
         '''
@@ -156,13 +124,7 @@ class TermRecord():
         avg_cshare = self.calculate_avg_cshare()
         return [
             self.search_term,
-            # self.term_freq[FILE_A],
-            # self.term_freq[FILE_B],
-            # self.term_freq[FILE_C],
             self.term_freq,
-            # self.title_freq[FILE_A],
-            # self.title_freq[FILE_B],
-            # self.title_freq[FILE_C],
             self.title_freq,
             f'{avg_rank:.2f}',
             trend,
@@ -243,14 +205,10 @@ if __name__ == "__main__":
         logger.info(f'Finished parsing {fn}.')
     logger.info(f'{len(included_terms)} out of {len(excluded_terms)+len(included_terms)} terms will be written to the output file.')
     # Join the search terms and titles into strings for better search performance.
-    # for k, v in all_terms.items():
-    #     all_terms[k] = ('. '.join(v)
     all_terms = '. '.join(all_terms)
-    # for k, v in all_titles.items():
-    #     all_titles[k] = '. '.join(v.keys())
     all_titles = '. '.join(all_titles.keys())
     if output_fn == '':
-        # Generate a filename if it's not specified, using the timestamp of this moment 
+        # Generate a filename if it's not specified by user, using the timestamp of this moment 
         from datetime import datetime as dt
         ts = dt.now().strftime('%Y-%m-%d-%I%M%S%p')
         output_fn = f'FinalFile_{ts}.csv'
@@ -262,13 +220,7 @@ if __name__ == "__main__":
         writer = csv.writer(outputfile, delimiter=',')
         writer.writerow([
             'Search Term',
-            # 'Month 1 Term Frequency',
-            # 'Month 2 Term Frequency',
-            # 'Month 3 Term Frequency',
             'Term Frequency',
-            # 'Month 1 Title Frequency',
-            # 'Month 2 Title Frequency',
-            # 'Month 3 Title Frequency',
             'Title Frequency',
             'Average Search Ranking',
             'Trend',
