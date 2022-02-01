@@ -93,7 +93,13 @@ class TermRecord():
         This method first sets the rank to zero for files in which the search term could not be found,
         then calculates the average rank of the search term across three files.
         '''
-        return sum([r if r < BIG_NUMBER else 0 for r in self.ranks.values()]) / self.appearances
+        sum_ranks = 0
+        for k, v in self.ranks.items():
+            if v == BIG_NUMBER:
+                self.ranks[k] = 0
+            else:
+                sum_ranks += v
+        return sum_ranks / self.appearances
 
     def calculate_avg_cshare(self):
         '''
