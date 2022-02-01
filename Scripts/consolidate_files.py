@@ -216,7 +216,7 @@ if __name__ == "__main__":
         # If the filename entered by the user doesn't include a valid file extension add it.
         output_fn += '.csv'
     logger.info(f'Calculating term and title frequencies and writing them to output file {output_fn}')
-    with open(output_fn, 'w', encoding='utf-8') as outputfile:
+    with open(output_fn, 'w', encoding='utf-8', newline='') as outputfile:
         writer = csv.writer(outputfile, delimiter=',')
         writer.writerow([
             'Search Term',
